@@ -1,0 +1,7 @@
+{
+	"name": "Advanced 3D Vision Tutorial ",
+	"build": { 
+		"context": "..",
+		"dockerfile": "Dockerfile"
+	}
+}
