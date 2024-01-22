@@ -1,13 +1,16 @@
 # Specify the parent image from which we build
-FROM ubuntu:22.04
+FROM ubuntu:jammy
 
 # OpenCV Version 
-ARG OpenCV_VERSION
-ARG Open3D_VERSION
-ARG Ceres_VERSION
+# ARG OpenCV_VERSION
+# ARG Open3D_VERSION
+# ARG Ceres_VERSION
+
+ENV TZ=Asia/Seoul
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # Install dependencies for OpenCV, Open3D, Ceres
-RUN apt-get update || true && apt-get upgrade -y &&\
+RUN apt-get update || true && apt-get upgrade -y && \
     # Install build tools, build dependencies and python
     apt-get install --no-install-recommends -y \
 	build-essential gcc g++ wget \
@@ -23,13 +26,9 @@ RUN apt-get update || true && apt-get upgrade -y &&\
 # Set Working directory
 WORKDIR /opt
 
-
 # Install OpenCV from Source
-RUN git clone --depth 1 --branch ${OpenCV_VERSION} https://github.com/opencv/opencv.git && \
-    git clone --depth 1 --branch ${OpenCV_VERSION} https://github.com/opencv/opencv_contrib.git && \
-    cd opencv && \
-    mkdir build && \
-    cd build && \
+RUN git clone https://github.com/opencv/opencv.git && \
+    cd opencv && mkdir build && cd build && \
     cmake \
 	-D CMAKE_BUILD_TYPE=RELEASE \
 	-D CMAKE_INSTALL_PREFIX=/usr/ \
@@ -39,14 +38,40 @@ RUN git clone --depth 1 --branch ${OpenCV_VERSION} https://github.com/opencv/ope
 	-D WITH_OPENGL=ON \
 	-D WITH_GSTREAMER=ON \
 	-D OPENCV_GENERATE_PKGCONFIG=ON \
+	-D BUILD_TESTS=OFF \
+	-D BUILD_PERF_TESTS=OFF \
+	-D BUILD_EXAMPLES=OFF \
+	-D BUILD_opencv_apps=OFF \
 	-D OPENCV_ENABLE_NONFREE=ON \
-	-D OPENCV_EXTRA_MODULES_PATH=/opt/opencv_contrib/modules \
-	-D INSTALL_PYTHON_EXAMPLES=OFF \
-	-D INSTALL_C_EXAMPLES=OFF \
 	-D BUILD_EXAMPLES=OFF .. && \
     make -j"$(nproc)" && \
-    make install && cd ../../ \
+    make install && cd /opt && \
     rm -rf opencv opencv_contrib # remove folders
+
+
+
+
+# Install Ceres Solver
+RUN git clone https://ceres-solver.googlesource.com/ceres-solver
+RUN mkdir -p ceres-solver/build
+WORKDIR ceres-solver/build
+RUN cmake -DBUILD_TESTING=OFF -DBUILD_EXAMPLES=OFF .. && make -j1 && make install && make clean 
+WORKDIR /
+
+
+
+
+# Install Open3D from file
+WORKDIR /opt
+
+RUN git clone https://github.com/isl-org/Open3D && \
+	cd Open3D && source util/install_deps_ubuntu.sh && && mkdir build && cd build && \
+	cmake -DBUILD_UNIT_TESTS=OFF .. && \
+	make -j3 && \
+	make install && make install-pip-package && cd ../../ && \
+	rm -rf ceres-solver-2.2.0 # remove folders
+
+
 
 # mkdir workspace and start workspace
 RUN mkdir workspace

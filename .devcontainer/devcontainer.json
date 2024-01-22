@@ -1,7 +1,29 @@
 {
-	"name": "Advanced 3D Vision Tutorial ",
-	"build": { 
-		"context": "..",
-		"dockerfile": "Dockerfile"
-	}
+    "name": "Advanced 3D Vision Tutorial",
+    "build": {
+        "context": "..",
+        "dockerfile": "Dockerfile",
+        "args": {
+            // 필요한 빌드 인자를 추가합니다.
+        }
+    },
+    "runArgs": [
+        // GUI 애플리케이션을 위한 Docker 설정
+        "--env", "DISPLAY",
+        "--net=host",
+        // X11 유닉스 소켓을 공유합니다.
+        "-v", "/tmp/.X11-unix:/tmp/.X11-unix:rw"
+    ],
+    "mounts": [
+        // 로컬 폴더와 Docker 컨테이너 간의 폴더 공유
+        "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
+    ],
+    "settings": { 
+        // VS Code 설정
+    },
+    "extensions": [
+        // 필요한 VS Code 확장
+    ],
+    "postCreateCommand": "echo '환경 구축 완료' && source package_check.sh",
+    "remoteUser": "root"
 }
