@@ -45,7 +45,7 @@ public:
     // For finding initial pose, we use solvePnP.
     bool find_initial_pose(CameraModel& cam, Frame& frame) const noexcept override
     {
-        std::vector<double> param = cam.params();
+        std::vector<double> param = cam.get_params();
         double fx = param[0];
         double fy = param[1];
         double cx = param[2];

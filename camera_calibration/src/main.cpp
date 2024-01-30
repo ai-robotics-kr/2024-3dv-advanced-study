@@ -25,7 +25,7 @@ int main(int argc, char** argv)
 {
     if (argc != 2)
     {
-        std::cout << "Usage: ./main_calib <path_to_config_file>" << std::endl;
+        std::cout << "Usage: ./calibration <path_to_config_file>" << std::endl;
         return 0;
     }
 
@@ -120,7 +120,7 @@ int main(int argc, char** argv)
     std::cout << "Optimzing with ceres..." << std::endl;
     ceres::Problem problem;
 
-    std::vector<double> camera_params = cam->get_params().data();
+    std::vector<double> camera_params = cam->get_params();
     double* p_camera_params = camera_params.data();
 
     std::cout << "Length of initial camera parameters: " << camera_params.size() << std::endl;
@@ -212,7 +212,11 @@ int main(int argc, char** argv)
             cv::Mat t = (cv::Mat_<double>(3, 1) << pose[3], pose[4], pose[5]);
             cv::Mat point_mat = (cv::Mat_<double>(3, 1) << point.x, point.y, point.z);
             cv::Mat rotated_point_mat = R * point_mat + t;
-            cv::Point3d rotated_point(rotated_point_mat.at<double>(0, 0), rotated_point_mat.at<double>(1, 0), rotated_point_mat.at<double>(2, 0));
+
+            cv::Point3d rotated_point(rotated_point_mat.at<double>(0, 0), 
+                                      rotated_point_mat.at<double>(1, 0), 
+                                      rotated_point_mat.at<double>(2, 0));
+
             cv::Point2d reprojected_pixel = cam->project(rotated_point);
 
             double error_x = object_pixel.x - reprojected_pixel.x;

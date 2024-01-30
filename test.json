@@ -1,0 +1,12 @@
+{
+    "data_path": "../data/chessboard",    
+    "board_pattern": [6, 9],
+    "board_size": [0.05, 0.05],
+    // "camera_model": "SingleSphere",
+    "camera_model": "DoubleSphere",
+    // "camera_model": "TripleSphere",
+    // "camera_model": "BrownConrady",
+    // "camera_model": "KannalaBrandt",
+    "output_path": "../data/",
+    "output_name": "result.json"
+}

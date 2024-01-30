@@ -9,8 +9,3 @@ echo "OpenCV version: $opencv_version"
 echo "Checking Ceres-solver version..."
 ceres_version=$(ceres-solver --version 2>&1) # Ceres-solver에 해당하는 버전 확인 명령어를 입력하세요.
 echo "Ceres-solver version: $ceres_version"
-
-# Open3D 버전 확인
-echo "Checking Open3D version..."
-open3d_version=$(python3 -c "import open3d; print(open3d.__version__)" 2>&1)
-echo "Open3D version: $open3d_version"

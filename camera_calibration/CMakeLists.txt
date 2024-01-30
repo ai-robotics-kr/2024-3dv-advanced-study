@@ -3,9 +3,6 @@ project(camera_calibration)
 
 add_compile_options(-std=c++17)
 
-# set(CMAKE_PREFIX_PATH "/usr/local/include" "/opt/homebrew/opt" "/opt/homebrew/lib")
-# set(CMAKE_BUILD_TYPE "Debug")
-
 set(MODULE_TEST         ON)
 set(MODULE_BENCHMARK    OFF)
 
@@ -14,28 +11,52 @@ message(STATUS "CMAKE_SOURCE_DIR: ${CMAKE_SOURCE_DIR}")
 message(STATUS "Is module test: ${MODULE_TEST}")
 message(STATUS "Is module benchmark: ${MODULE_BENCHMARK}")
 
+
 # Dependencies
 find_package(OpenCV REQUIRED)
 find_package(Ceres REQUIRED)
 find_package(Eigen3 REQUIRED)
 
+
+##### jsoncpp #####
+include(FetchContent)
+FetchContent_Declare(
+  jsoncpp
+  GIT_REPOSITORY https://github.com/open-source-parsers/jsoncpp.git
+  GIT_TAG        master
+)
+# jsoncpp 속성 가져오기
+FetchContent_GetProperties(jsoncpp)
+if(NOT jsoncpp_POPULATED)
+  FetchContent_Populate(jsoncpp)
+  # jsoncpp 테스트 비활성화
+  set(JSONCPP_WITH_TESTS OFF CACHE BOOL "" FORCE)
+  set(JSONCPP_WITH_POST_BUILD_UNITTEST OFF CACHE BOOL "" FORCE)
+  # jsoncpp 추가
+  add_subdirectory(${jsoncpp_SOURCE_DIR} ${jsoncpp_BINARY_DIR})
+endif()
+##### jsoncpp #####
+
+
 set(DEPENDENCIES 
     Eigen3::Eigen
     ${OpenCV_LIBRARIES}
-    ${CERES_LIBRARIES})
+    ${CERES_LIBRARIES}
+    jsoncpp_lib)
+
 
 include_directories("${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/include")
-
 set(EXAMPLE_DIR	"${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/src")
 
-# Build exec file
-# add_executable(
-#     ${PROJECT_NAME}
-#     ${EXAMPLE_DIR}/main.cpp)
-# target_link_libraries(
-#     ${PROJECT_NAME}
-#     ${DEPENDENCIES}
-# )
+
+
+add_executable(calibration ${EXAMPLE_DIR}/main.cpp)
+target_link_libraries(calibration
+  ${OpenCV_LIBRARIES}
+  ${CERES_LIBRARIES}
+  jsoncpp_lib
+)
+target_include_directories(calibration PRIVATE ${jsoncpp_SOURCE_DIR}/include)
 
 
 if (${MODULE_TEST})
@@ -63,67 +84,3 @@ if(${MODULE_BENCHMARK})
 
 
 endif()
-
-
-
-
-
-
-
-# include(FetchContent)
-
-# FetchContent_Declare(
-#   jsoncpp
-#   GIT_REPOSITORY https://github.com/open-source-parsers/jsoncpp.git
-#   GIT_TAG        master
-# )
-# FetchContent_MakeAvailable(jsoncpp)
-
-# include_directories(
-#   include
-#   ${OpenCV_INCLUDE_DIRECTORIES}
-#   ${CERES_INCLUDE_DIRS}
-# )
-
-# add_executable(${PROJECT_NAME}
-#     src/main.cpp
-# )
-
-# target_link_libraries(${PROJECT_NAME}
-#   ${OpenCV_LIBRARIES}
-#   ${CERES_LIBRARIES}
-#   # jsoncpp_lib_static
-#   jsoncpp_lib
-# )
-# target_include_directories(${PROJECT_NAME} PRIVATE ${jsoncpp_SOURCE_DIR}/include)
-
-# add_executable(DSCM_calib
-#     src/main_calib.cpp
-# )
-
-# target_link_libraries(DSCM_calib
-#   ${OpenCV_LIBRARIES}
-#   ${CERES_LIBRARIES}
-#   # jsoncpp_lib_static
-#   jsoncpp_lib
-# )
-# target_include_directories(DSCM_calib PRIVATE ${jsoncpp_SOURCE_DIR}/include)
-
-
-
-# enable_testing()
-
-# add_executable(
-#   test_camera_model
-#   src/test_camera_model.cpp
-# )
-# target_link_libraries(
-#   test_camera_model
-#   GTest::gtest_main
-#   ${OpenCV_LIBRARIES}
-#   ${CERES_LIBRARIES}
-# )
-
-
-# include(GoogleTest)
-# gtest_discover_tests(test_camera_model)
