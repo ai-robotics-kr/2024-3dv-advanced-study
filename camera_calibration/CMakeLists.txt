@@ -50,13 +50,13 @@ set(EXAMPLE_DIR	"${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/src")
 
 
 
-add_executable(calibration ${EXAMPLE_DIR}/calibration.cpp)
-target_link_libraries(calibration
+add_executable(mono_calibration ${EXAMPLE_DIR}/mono_calibration.cpp)
+target_link_libraries(mono_calibration
   ${OpenCV_LIBRARIES}
   ${CERES_LIBRARIES}
   jsoncpp_lib
 )
-target_include_directories(calibration PRIVATE ${jsoncpp_SOURCE_DIR}/include)
+target_include_directories(mono_calibration PRIVATE ${jsoncpp_SOURCE_DIR}/include)
 
 
 add_executable(undistort ${EXAMPLE_DIR}/undistort.cpp)

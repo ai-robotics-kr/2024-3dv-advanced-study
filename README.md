@@ -23,6 +23,27 @@ Ai Robotics Korea's 2024  3D vision study group's advanced project
 
 위 [링크]()를 통해 필요한 데이터셋을 다운로드 받은 후 data 폴더 안에서 압축 해제한다.
 
+#### 2. Dependencies
+
+For `Mac` user, recommend to use `brew`
+
+```zsh
+brew install opencv
+brew install ceres-solver
+brew install google-benchmark
+brew install googletest
+```
+
+For `Linux` user
+
+```bash
+sudo apt-get install libopencv-dev libceres-dev libbenchmark-dev libgtest-dev
+```
+
+For `Docker` user, please use [`devcontainer`](https://code.visualstudio.com/docs/devcontainers/containers) of VSCode.
+There is `Dockerfile` in `.devcontainer`. 
+
+
 #### 2. 실행파일 빌드
 
 ```bash
@@ -31,7 +52,7 @@ cd build
 cmake ..
 make
 
-./calibration /path/to/config.json
+./mono_calibration /path/to/config.json
 ./undistort /path/to/image /path/to/calib_result.json
 ```
 
@@ -97,3 +118,12 @@ result.json 파일 내부
 - https://arxiv.org/pdf/1807.08957
 - https://ieeexplore.ieee.org/document/1642666
 - https://openaccess.thecvf.com/content/CVPR2023/papers/Xie_OmniVidar_Omnidirectional_Depth_Estimation_From_Multi-Fisheye_Images_CVPR_2023_paper.pdf
+
+### TODO
+
+- [x] Monocular camera calibration
+- [x] Undistort frame
+- [ ] Photometric camera calibration
+- [ ] Stereo camera calibration
+- [ ] Depth estimation
+- [ ] PnP method
