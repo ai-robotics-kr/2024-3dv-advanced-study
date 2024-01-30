@@ -61,18 +61,6 @@ WORKDIR /
 
 
 
-# Install Open3D from file
-WORKDIR /opt
-
-RUN git clone https://github.com/isl-org/Open3D && \
-	cd Open3D && source util/install_deps_ubuntu.sh && && mkdir build && cd build && \
-	cmake -DBUILD_UNIT_TESTS=OFF .. && \
-	make -j3 && \
-	make install && make install-pip-package && cd ../../ && \
-	rm -rf ceres-solver-2.2.0 # remove folders
-
-
-
 # mkdir workspace and start workspace
 RUN mkdir workspace
 
