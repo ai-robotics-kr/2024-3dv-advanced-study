@@ -41,10 +41,11 @@ sudo apt-get install libopencv-dev libceres-dev libbenchmark-dev libgtest-dev
 ```
 
 For `Docker` user, please use [`devcontainer`](https://code.visualstudio.com/docs/devcontainers/containers) of VSCode.
-There is `Dockerfile` in `.devcontainer`. 
+There is `Dockerfile` in `.devcontainer`.
 
+Before run devcontainer, please type `xhost +local:docker` in your teminal, for linux user.
 
-#### 2. 실행파일 빌드
+#### 3. 실행파일 빌드
 
 ```bash
 mkdir build
@@ -85,7 +86,7 @@ test.json 파일 내부
 }
 ```
 
-#### 3. 결과 파일 해석
+#### 4. 결과 파일 해석
 
 result.json 파일 내부
 
