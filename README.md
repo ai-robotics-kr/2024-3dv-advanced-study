@@ -15,7 +15,7 @@ Ai Robotics Korea's 2024  3D vision study group's advanced project
 
 [Google Drive](https://drive.google.com/file/d/1EOksBolgSh3HrfM2vFcT6uha4GnnK2L9/view?usp=sharing)
 
-데이터셋에는 T265 카메라의 왼쪽 이미지 프레임들과 kalibr 로 보정된 결과 파일이 있다. 
+데이터셋에는 T265 카메라의 왼쪽 이미지 프레임들과 kalibr 로 보정된 결과 파일이 있다.
 
 ### How to Run
 
@@ -30,7 +30,9 @@ mkdir build
 cd build
 cmake ..
 make
-./calibration ../test.json
+
+./calibration /path/to/config.json
+./undistort /path/to/image /path/to/calib_result.json
 ```
 
 test.json 파일 내부
@@ -64,6 +66,29 @@ test.json 파일 내부
 
 #### 3. 결과 파일 해석
 
+result.json 파일 내부
+
+- `avg_residual`: 카메라 보정의 mean residual 값, 단위: pixel
+- `camera_model`: 사용된 카메라 모델
+- `number_of_used_images`: 이전 보정 과정 중 사용된 이미지 수
+- `parameters`: 카메라 파라미터. fx, fy, cx, cy, ... 순서
+
+```json
+{
+    "avg_residual" : 0.070837114453125141,
+    "camera_model" : "DoubleSphere",
+    "number_of_used_images" : 397,
+    "parameters" : 
+    [
+        285.04119723202768,
+        285.25044458408809,
+        426.52144861596793,
+        386.41686040643305,
+        0.00094578527212422743,
+        0.64125887224024325
+    ]
+}
+```
 
 ### Reference
 
