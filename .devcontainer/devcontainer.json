@@ -24,6 +24,6 @@
     "extensions": [
         // 필요한 VS Code 확장
     ],
-    "postCreateCommand": "echo '환경 구축 완료' && source package_check.sh",
+    "postCreateCommand": "echo '환경 구축 완료'",
     "remoteUser": "root"
 }

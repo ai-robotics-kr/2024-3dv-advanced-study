@@ -11,7 +11,12 @@
 #include <memory>
 
 
-namespace fs = std::__fs::filesystem;
+// macOS에서는 std::filesystem이 아직 실험적인 기능이므로
+#if defined(__APPLE__) || defined(__MACOSX)
+    namespace fs = std::__fs::filesystem;
+#else
+    namespace fs = std::filesystem;
+#endif
 
 
 
