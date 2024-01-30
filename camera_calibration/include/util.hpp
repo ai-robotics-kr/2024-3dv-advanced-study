@@ -8,12 +8,10 @@
 #include <array>
 #include <iostream>
 #include <fstream>
+#include <memory>
 
 
 namespace fs = std::__fs::filesystem;
-
-
-
 
 
 
@@ -66,6 +64,87 @@ Cfg read_json(const std::string& json_file)
     return cfg;
 }
 
+
+bool save_as_json(std::string output_path,
+                  std::string output_name,
+                  std::string cam_model, 
+                  const std::vector<double>& parameters,
+                  const int& number_of_images,
+                  const double& avg_res)
+{
+    Json::Value root;
+    root["camera_model"] = cam_model;
+    
+    Json::Value paramsArray(Json::arrayValue);
+    for (double param : parameters) {
+        paramsArray.append(param);
+    }
+    root["parameters"] = paramsArray;
+
+    root["number_of_used_images"] = number_of_images;
+    root["avg_residual"] = avg_res;
+
+    // 파일 저장
+    std::ofstream file(output_path + output_name);
+    Json::StreamWriterBuilder builder;
+    builder["commentStyle"] = "None";
+    builder["indentation"] = "    ";  // 적절한 들여쓰기 설정
+    std::unique_ptr<Json::StreamWriter> writer(builder.newStreamWriter());
+    writer->write(root, &file);
+
+    return true;
+}
+
+
+struct CalibResult
+{
+    std::string camera_model;
+    std::vector<double> parameters;
+    int number_of_images;
+    double avg_residual;
+
+    void show()
+    {
+        std::cout << "Camera model: " << camera_model << std::endl;
+        std::cout << "Parameters: ";
+        for (double param : parameters) {
+            std::cout << param << " ";
+        }
+        std::cout << std::endl;
+        std::cout << "Number of images: " << number_of_images << std::endl;
+        std::cout << "Average residual: " << avg_residual << std::endl;
+    }
+};
+
+CalibResult read_calib_result(std::string file)
+{
+    std::ifstream ifs(file);
+
+    Json::Value root;
+    Json::Reader reader;
+
+    bool parsingSuccessful = reader.parse(ifs, root);
+    if (!parsingSuccessful) {
+        std::cout << "Failed to parse configuration\n"
+                  << reader.getFormattedErrorMessages();
+        exit(1);
+    }
+
+    CalibResult result;
+
+    result.camera_model = root["camera_model"].asString();
+
+    Json::Value params = root["parameters"];
+    for (int i = 0; i < params.size(); i++)
+    {
+        result.parameters.push_back(params[i].asDouble());
+    }
+
+    result.number_of_images = root["number_of_used_images"].asInt();
+    result.avg_residual = root["avg_residual"].asDouble();
+
+    return result;
+}
 
 
 std::vector<std::string> read_images(const std::string& data_path, std::string extension = ".png")

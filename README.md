@@ -72,4 +72,3 @@ test.json 파일 내부
 - https://arxiv.org/pdf/1807.08957
 - https://ieeexplore.ieee.org/document/1642666
 - https://openaccess.thecvf.com/content/CVPR2023/papers/Xie_OmniVidar_Omnidirectional_Depth_Estimation_From_Multi-Fisheye_Images_CVPR_2023_paper.pdf
-

@@ -232,5 +232,10 @@ int main(int argc, char** argv)
 
     std::cout << "Mean reprojection error: " << total_error << std::endl;
 
+    if (save_as_json(cfg.output_path, cfg.output_name, cfg.camera_model, cam->get_params(),
+                     good_frames.size(),
+                     total_error))
+        std::cout << "Save as json file!\n";
+
     return 0;
 }
