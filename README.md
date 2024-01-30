@@ -13,9 +13,9 @@ Ai Robotics Korea's 2024  3D vision study group's advanced project
 
 ### Dataset path
 
-[Google Drive](https://drive.google.com/file/d/1EOksBolgSh3HrfM2vFcT6uha4GnnK2L9/view?usp=sharing)
+[Google Drive](https://drive.google.com/file/d/1mSsFsi8AZ95_KDWaeOHriKvshpSuHv6-/view?usp=sharing)
 
-데이터셋에는 T265 카메라의 왼쪽 이미지 프레임들과 kalibr 로 보정된 결과 파일이 있다.
+데이터셋에는 T265 카메라의 좌우 이미지 프레임들과 kalibr로 보정된 결과 파일이 있다.
 
 ### How to Run
 
@@ -51,7 +51,7 @@ test.json 파일 내부
 
 ```json
 {
-    "data_path": "/path/to/dataset",    
+    "data_path": "/path/to/monodataset",    
     "board_pattern": [6, 9],
     "board_size": [0.05, 0.05],
     // "camera_model": "SingleSphere",
