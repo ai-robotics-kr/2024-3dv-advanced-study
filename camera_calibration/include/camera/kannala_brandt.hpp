@@ -115,7 +115,7 @@ public:
             init_diff = std::abs(diff);
             ru -= step * up / down;
         }
-        std::cout << "init_diff: " << init_diff << std::endl;
+        // std::cout << "init_diff: " << init_diff << std::endl;
         return ru;
     }
 
