@@ -115,6 +115,7 @@ result.json 파일 내부
 - https://arxiv.org/pdf/1807.08957
 - https://ieeexplore.ieee.org/document/1642666
 - https://openaccess.thecvf.com/content/CVPR2023/papers/Xie_OmniVidar_Omnidirectional_Depth_Estimation_From_Multi-Fisheye_Images_CVPR_2023_paper.pdf
+- https://www.mdpi.com/1424-8220/19/16/3604#B19-sensors-19-03604
 
 ## TODO
 
