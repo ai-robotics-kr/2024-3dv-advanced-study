@@ -179,3 +179,22 @@ std::vector<std::string> read_images(const std::string& data_path, std::string e
     return images;
 }
 
+
+cv::Mat convertVec6dToTransformMatrix(const cv::Vec6d& vec6d) {
+    // 회전 벡터 (rvec)와 변환 벡터 (tvec) 추출
+    cv::Vec3d rvec(vec6d[0], vec6d[1], vec6d[2]);
+    cv::Vec3d tvec(vec6d[3], vec6d[4], vec6d[5]);
+
+    // 회전 벡터를 회전 행렬로 변환
+    cv::Mat R;
+    cv::Rodrigues(rvec, R);
+
+    // 4x4 변환 행렬 생성
+    cv::Mat T = cv::Mat::eye(4, 4, R.type());
+    R.copyTo(T(cv::Rect(0, 0, 3, 3)));
+    for (int i = 0; i < 3; ++i) {
+        T.at<double>(i, 3) = tvec[i];
+    }
+
+    return T;
+}
