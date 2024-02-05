@@ -16,7 +16,7 @@ message(STATUS "Is module benchmark: ${MODULE_BENCHMARK}")
 find_package(OpenCV REQUIRED)
 find_package(Ceres REQUIRED)
 find_package(Eigen3 REQUIRED)
-
+find_package(Pangolin REQUIRED)
 
 ##### jsoncpp #####
 include(FetchContent)
@@ -66,6 +66,30 @@ target_link_libraries(undistort
   jsoncpp_lib
 )
 target_include_directories(undistort PRIVATE ${jsoncpp_SOURCE_DIR}/include)
+
+
+add_executable(stereo_calibration ${EXAMPLE_DIR}/stereo_calibration.cpp)
+target_link_libraries(stereo_calibration
+  ${OpenCV_LIBRARIES}
+  ${CERES_LIBRARIES}
+  jsoncpp_lib
+)
+target_include_directories(stereo_calibration PRIVATE ${jsoncpp_SOURCE_DIR}/include)
+
+add_executable(viewing_result ${EXAMPLE_DIR}/viewing_result.cpp)
+target_link_libraries(viewing_result
+  ${OpenCV_LIBRARIES}
+  ${CERES_LIBRARIES}
+  jsoncpp_lib
+  ${Pangolin_LIBRARIES}  
+)
+target_include_directories(
+  viewing_result 
+  PRIVATE 
+  ${jsoncpp_SOURCE_DIR}/include
+  ${GLEW_INCLUDE_DIRS}
+  ${Pangolin_INCLUDE_DIRS})
+
 
 
 

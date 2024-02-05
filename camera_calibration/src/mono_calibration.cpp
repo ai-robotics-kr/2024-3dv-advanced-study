@@ -80,7 +80,6 @@ int main(int argc, char** argv)
 
 
     std::vector<std::vector<cv::Point2d>> corners(frames.size());
-    std::vector<cv::Vec6d> camera_poses(frames.size());
 
     std::vector<int> good_frames_id;
 

@@ -1,8 +1,8 @@
 /**
  * File: camera_model_template.hpp
  * Author: Jun Hyeok Choi, dkwnsgur12@gmail.com
- * Date: 2023-12-27
- * Copyright (c) 2023 Jun Hyeok Choi. All rights reserved.
+ * Date: 2024-1-27
+ * Copyright (c) 2024 Jun Hyeok Choi. All rights reserved.
  * Description: This file is for camera model template. All camera model should be derived from this class.
  * 
  */
@@ -11,7 +11,7 @@
 
 #include <opencv2/core/core.hpp>
 #include <vector>
-
+#include <iostream>
 
 
 
@@ -27,9 +27,15 @@ public:
     virtual cv::Point3d unproject(const cv::Point2d& pixel) const noexcept = 0;
 
     std::vector<double> get_params() const noexcept { return params_; }
-    // const std::vector<double>& params() const { return params_; }
     void set_params(const std::vector<double>& params) noexcept { params_ = params; }
 
+    void show() const noexcept 
+    {
+        std::cout << "Camera parameters: ";
+        for (auto& param: params_)
+            std::cout << param << " ";
+        std::cout << std::endl;
+    }
     struct ReprojectionError
     {
         ReprojectionError(const cv::Point2d& pixel, const cv::Point3d& point) : pixel_(pixel), point_(point) {}

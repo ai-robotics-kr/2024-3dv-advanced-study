@@ -122,6 +122,6 @@ result.json 파일 내부
 - [x] Monocular camera calibration
 - [x] Undistort frame
 - [ ] Photometric camera calibration
-- [ ] Stereo camera calibration
+- [X] Stereo camera calibration
 - [ ] Depth estimation
 - [ ] PnP method
