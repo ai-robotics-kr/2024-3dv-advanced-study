@@ -2,7 +2,7 @@
 
 #include "board/board.hpp"
 #include "frame/frame.hpp"
-#include "camera/camera_model_template.hpp"
+#include "camera/cameras.hpp"
 #include <opencv2/core/core.hpp>
 #include <vector>
 #include <array>

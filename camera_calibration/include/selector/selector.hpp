@@ -10,8 +10,8 @@ struct SettingPixelSelector
 {
     static constexpr double kMinGrad2   = 100.0;
     static constexpr double kMaxGrad2   = 200.0;
-    static constexpr int    kCellWidth  = 10;
-    static constexpr int    kCellHeight = 20;
+    static constexpr int    kCellWidth  = 40;
+    static constexpr int    kCellHeight = 40;
 };
 
 

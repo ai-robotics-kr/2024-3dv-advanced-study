@@ -1,9 +1,4 @@
-#include "camera/camera_model_template.hpp"
-#include "camera/brown_conrady.hpp"
-#include "camera/kannala_brandt.hpp"
-#include "camera/single_sphere.hpp"
-#include "camera/double_sphere.hpp"
-#include "camera/triple_sphere.hpp"
+#include "camera/cameras.hpp"
 #include "frame/frame.hpp"
 #include "board/chessboard.hpp"
 #include "util.hpp"
@@ -91,33 +86,7 @@ struct DoubleSphereStereoCalib
 
 
 
-void set_camera_model(std::shared_ptr<CameraModel>& cam, Cfg cfg)
-{
-    if (cfg.camera_model == "BrownConrady")
-    {
-        cam = std::make_shared<BrownConrady>();
-    }
-    else if (cfg.camera_model == "KannalaBrandt")
-    {
-        cam = std::make_shared<KannalaBrandt>();
-    }
-    else if (cfg.camera_model == "SingleSphere")
-    {
-        cam = std::make_shared<SingleSphere>();
-    }
-    else if (cfg.camera_model == "DoubleSphere")
-    {
-        cam = std::make_shared<DoubleSphere>();
-    }
-    else if (cfg.camera_model == "TripleSphere")
-    {
-        cam = std::make_shared<TripleSphere>();
-    }
-    else
-    {
-        std::cout << "Invalid camera model: " << cfg.camera_model << std::endl;
-    }    
-}
+
 
 
 
@@ -236,8 +205,8 @@ int main(int argc, char** argv)
     cam1_cfg.show();
     cam2_cfg.show();
 
-    std::shared_ptr<CameraModel> cam1; set_camera_model(cam1, cam1_cfg);
-    std::shared_ptr<CameraModel> cam2; set_camera_model(cam2, cam2_cfg);
+    std::shared_ptr<CameraModel> cam1; set_camera_model(cam1_cfg.camera_model, cam1);
+    std::shared_ptr<CameraModel> cam2; set_camera_model(cam2_cfg.camera_model, cam2);
 
 
     // init chessboard
@@ -271,30 +240,30 @@ int main(int argc, char** argv)
     }
 
     ///////// After monocular calibration, optimize stereo camera. /////////
-    // std::thread t1(monocalib, std::ref(cam1_cfg), std::ref(cam1), std::ref(frames1), std::ref(board));
-    // std::thread t2(monocalib, std::ref(cam2_cfg), std::ref(cam2), std::ref(frames2), std::ref(board));
+    std::thread t1(monocalib, std::ref(cam1_cfg), std::ref(cam1), std::ref(frames1), std::ref(board));
+    std::thread t2(monocalib, std::ref(cam2_cfg), std::ref(cam2), std::ref(frames2), std::ref(board));
 
-    // t1.join();
-    // t2.join();
+    t1.join();
+    t2.join();
 
     ///////// Don't monocular calibration, just optimize stereo camera. /////////
-    double f, cx, cy;
-    double width = frames1[0].width;
-    double height = frames1[0].height;
-    f = width / 4;
-    cx = (width - 1.0) / 2;
-    cy = (height - 1.0) / 2;
+    // double f, cx, cy;
+    // double width = frames1[0].width;
+    // double height = frames1[0].height;
+    // f = width / 4;
+    // cx = (width - 1.0) / 2;
+    // cy = (height - 1.0) / 2;
 
-    cam1->init_params(f, cx, cy);
-    cam2->init_params(f, cx, cy);
+    // cam1->init_params(f, cx, cy);
+    // cam2->init_params(f, cx, cy);
 
-    for (size_t i = 0; i < frames1.size(); i++)
-    {
-        if (!board.find_initial_pose(*cam1, frames1[i]))
-            std::cout << "Failed to find good pose for frame left: " << frames1[i].id << std::endl;
-        if (!board.find_initial_pose(*cam2, frames2[i]))
-            std::cout << "Failed to find good pose for frame right: " << frames2[i].id << std::endl;
-    }
+    // for (size_t i = 0; i < frames1.size(); i++)
+    // {
+    //     if (!board.find_initial_pose(*cam1, frames1[i]))
+    //         std::cout << "Failed to find good pose for frame left: " << frames1[i].id << std::endl;
+    //     if (!board.find_initial_pose(*cam2, frames2[i]))
+    //         std::cout << "Failed to find good pose for frame right: " << frames2[i].id << std::endl;
+    // }
 
 
     std::cout << "Start Stereo Calibration!" << std::endl;
@@ -391,8 +360,16 @@ int main(int argc, char** argv)
     std::cout << std::endl;
 
     cv::Mat T_c1_to_c2_mat = convertVec6dToTransformMatrix(T_c1_to_c2);
-    cv::Mat T_c2_to_c1 = T_c1_to_c2_mat.inv();
 
-    std::cout << "Transform from c2 to c1\n" << T_c2_to_c1 << std::endl;
+    // Save as json
+    std::string output_file = "../data/stereo_calibration_result.json";
 
+    save_stereo_calib_as_json(
+        output_file,
+        cam1_cfg.camera_model,
+        cam2_cfg.camera_model,
+        l_intrinsic,
+        r_intrinsic,
+        T_c1_to_c2
+    );
 }

@@ -35,6 +35,12 @@ public:
         data.resize(grid_size.area(), val);
     }
 
+    T operator[](int i) const { return data[i]; }
+    T& operator[](int i) { return data[i]; }
+
+    int size() const noexcept { return data.size(); }
+    int rows() const noexcept { return grid_size.height; }
+    int cols() const noexcept { return grid_size.width; }
 
     iterator begin() noexcept { return data.begin(); }
     iterator end() noexcept { return data.end(); }
