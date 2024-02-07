@@ -16,7 +16,7 @@ class DepthEstimatorTest : public ::testing::Test {
 protected:
     std::string l_data_path = "../data/left/frame0000.png";
     std::string r_data_path = "../data/right/frame0000.png";
-    std::string calib_path = "../data/stereo_calibration_result.json";
+    std::string calib_path  = "../data/stereo_calibration_result.json";
 
     Frame l_frame = Frame(0, l_data_path);
     Frame r_frame = Frame(0, r_data_path);
@@ -168,15 +168,25 @@ TEST_F(DepthEstimatorTest, TestMatching)
     cv::Mat l_image = l_frame.image.clone(); cv::cvtColor(l_image, l_image, cv::COLOR_GRAY2BGR);
     cv::Mat r_image = r_frame.image.clone(); cv::cvtColor(r_image, r_image, cv::COLOR_GRAY2BGR);
 
-    for (const auto& depth_point : depth_point_grid)
+    for (int i = 0; i < depth_point_grid.size(); i++)
     {
-        cv::circle(l_image, depth_point.point, 1, cv::Scalar(0, 0, 255), -1); 
+        cv::Scalar unique_color = cv::Scalar(rand() % 255, rand() % 255, rand() % 255);
+
+        if (r_points[i].point.x == -1) continue;
+
+        cv::circle(l_image, depth_point_grid[i].point, 1, unique_color, 3);
+        cv::circle(r_image, r_points[i].point, 1, unique_color, 3);
     }
 
-    for (const auto& depth_point : r_points)
-    {
-        cv::circle(r_image, depth_point.point, 1, cv::Scalar(0, 0, 255), -1); 
-    }
+    // for (const auto& depth_point : depth_point_grid)
+    // {
+    //     cv::circle(l_image, depth_point.point, 1, cv::Scalar(0, 0, 255), -1); 
+    // }
+
+    // for (const auto& depth_point : r_points)
+    // {
+    //     cv::circle(r_image, depth_point.point, 1, cv::Scalar(0, 0, 255), -1); 
+    // }
 
     // stack left and right image
     cv::Mat stacked;
