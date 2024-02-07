@@ -7,6 +7,10 @@
 
 이메일: dkwnsgur12@gmail.com
 
+## Presentation pdf file
+
+[pdf](pdf/프레젠테이션.pdf)
+
 ## Dataset path
 
 [Google Drive](https://drive.google.com/file/d/1mSsFsi8AZ95_KDWaeOHriKvshpSuHv6-/view?usp=sharing)
@@ -17,7 +21,7 @@
 
 ### 1. 데이터셋 다운로드
 
-위 [링크]()를 통해 필요한 데이터셋을 다운로드 받은 후 data 폴더 안에서 압축 해제한다.
+위 링크를 통해 필요한 데이터셋을 다운로드 받은 후 data 폴더 안에서 압축 해제한다.
 
 ### 2. Dependencies
 
@@ -49,11 +53,17 @@ cd build
 cmake ..
 make
 
-./mono_calibration /path/to/config.json
-./undistort /path/to/image /path/to/calib_result.json
+# for monocular camera calibration
+./camera_calibration/mono_calibration /path/to/config.json
+# to see how to undistort distorted image
+./camera_calibration/undistort /path/to/image /path/to/calib_result.json
+# how to calibrate stereo camera
+./camera_calibration/stereo_calibration /path/to/left_config.json /path/to/right_config.json
+# how to matching and estimate depth from patch alignment
+./camera_calibration/test_matching
 ```
 
-test.json 파일 내부
+#### `monocular_calibration_config.json`
 
 - `data_path`: 데이터셋 폴더 경로
 - `board_patter`: 체스보드 패턴
@@ -82,9 +92,9 @@ test.json 파일 내부
 }
 ```
 
-#### 4. 결과 파일 해석
+### 4. 결과 파일 해석
 
-result.json 파일 내부
+`monocular_calib_result.json` 파일 내부
 
 - `avg_residual`: 카메라 보정의 mean residual 값, 단위: pixel
 - `camera_model`: 사용된 카메라 모델
@@ -108,6 +118,8 @@ result.json 파일 내부
 }
 ```
 
+위의 파일을 기반으로 stereo camera calibration을 한다.
+
 ## Reference
 
 - https://docs.opencv.org/4.x/dc/dbb/tutorial_py_calibration.html
@@ -116,6 +128,8 @@ result.json 파일 내부
 - https://ieeexplore.ieee.org/document/1642666
 - https://openaccess.thecvf.com/content/CVPR2023/papers/Xie_OmniVidar_Omnidirectional_Depth_Estimation_From_Multi-Fisheye_Images_CVPR_2023_paper.pdf
 - https://www.mdpi.com/1424-8220/19/16/3604#B19-sensors-19-03604
+- https://github.com/cjh1995-ros/omni_triangulation/tree/main
+- https://github.com/midjji/lambdatwist-p3p/tree/master
 
 ## TODO
 
@@ -123,5 +137,5 @@ result.json 파일 내부
 - [x] Undistort frame
 - [ ] Photometric camera calibration
 - [X] Stereo camera calibration
-- [ ] Depth estimation
-- [ ] PnP method
+- [X] Depth estimation
+- [X] PnP method
